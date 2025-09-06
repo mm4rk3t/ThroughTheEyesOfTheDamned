@@ -1,14 +1,32 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    private Camera cam;
+    private GameObject pointer;
+    private GameObject rotatePivot;
+    [SerializeField] public GameObject sword;
+    public AudioSource attackSound;
+    private int lives = 3;
+    private int attackDmg = 35;
 
+    private bool isAttacking = false;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        cam = Camera.main;
+        pointer = transform.GetChild(0).gameObject;
+        rotatePivot = transform.GetChild(1).gameObject;
+        Cursor.visible = false;
+        sword.SetActive(false);
+
     }
 
     void Update()
@@ -17,10 +35,45 @@ public class PlayerController : MonoBehaviour
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput.Normalize();
+        Vector3 mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
+        float angleRad = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x);
+        float angleDeg = (180 / Mathf.PI) * angleRad - 90;
+
+        if(!isAttacking)
+            rotatePivot.transform.rotation = Quaternion.Euler(0f, 0f, angleDeg);
+        
+        pointer.transform.position = mousePos;
+
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("attack");
+            StartCoroutine(SwordRoutine());
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Scene currentScene = SceneManager.GetActiveScene();  // get current scene
+            SceneManager.LoadScene(currentScene.name);           // reload it
+        }
+
+    }
+
+    private IEnumerator SwordRoutine()
+    {
+        attackSound.Play();
+        sword.SetActive(true);
+        isAttacking = true;
+        yield return new WaitForSeconds(0.25f);
+        sword.SetActive(false);
+        isAttacking = false;
     }
 
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
+
+
+
 }
