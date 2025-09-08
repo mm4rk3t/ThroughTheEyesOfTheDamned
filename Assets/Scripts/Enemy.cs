@@ -1,27 +1,35 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using TMPro.EditorUtilities;
+using UnityEngine.LowLevelPhysics;
+using Unity.VisualScripting;
 
 public class Enemy : MonoBehaviour
 {
-    private int health = 100;
+    [SerializeField]private int health = 100;
+    private int _maxHealth;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
-
+    private FloatingHealthBar healthSlider;
     private void Start()
     {
+        _maxHealth = health;
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
             Debug.LogError("No SpriteRenderer found on enemy!");
         }
         originalColor = spriteRenderer.color;
-
+        healthSlider = GetComponentInChildren<FloatingHealthBar>();
+        healthSlider.UpdateHealthBar(health, _maxHealth);
     }
 
     public void TakeDamage(int dmg)
     {
         StartCoroutine(DamageFlash());
         health -= dmg;
+        healthSlider.UpdateHealthBar(health, _maxHealth);
         Debug.Log(gameObject.name + " took " + dmg + " damage. HP left: " + health);
         
         if (health <= 0)
