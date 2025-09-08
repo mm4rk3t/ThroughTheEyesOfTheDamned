@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
-using TMPro.EditorUtilities;
-using UnityEngine.LowLevelPhysics;
-using Unity.VisualScripting;
+
 
 public class Enemy : MonoBehaviour
 {
