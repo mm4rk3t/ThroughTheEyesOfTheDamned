@@ -1,21 +1,22 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEditor.Compilation;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 5f;
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Camera cam;
     private GameObject pointer;
     private GameObject rotatePivot;
-    [SerializeField] public GameObject sword;
+    //[SerializeField] private GameObject sword;
     public AudioSource attackSound;
     private int lives = 3;
     private int attackDmg = 35;
-
     private bool isAttacking = false;
+    private float angleDeg;
     
     void Start()
     {
@@ -23,8 +24,8 @@ public class PlayerController : MonoBehaviour
         cam = Camera.main;
         pointer = transform.GetChild(0).gameObject;
         rotatePivot = transform.GetChild(1).gameObject;
-        Cursor.visible = false;
-        sword.SetActive(false);
+        Cursor.visible = true;
+        //sword.SetActive(false);
 
     }
 
@@ -35,21 +36,21 @@ public class PlayerController : MonoBehaviour
         moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput.Normalize();
         Vector3 mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
-        float angleRad = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x);
-        float angleDeg = (180 / Mathf.PI) * angleRad - 90;
+        angleDeg = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * Mathf.Rad2Deg - 90;
 
         if(!isAttacking)
+        { 
             rotatePivot.transform.rotation = Quaternion.Euler(0f, 0f, angleDeg);
-        
+        }
         pointer.transform.position = mousePos;
 
-
+        /*
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("attack");
             StartCoroutine(SwordRoutine());
         }
-
+        */
         if (Input.GetKeyDown(KeyCode.R))
         {
             Scene currentScene = SceneManager.GetActiveScene();  // get current scene
@@ -57,7 +58,8 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
+    
+    /*
     private IEnumerator SwordRoutine()
     {
         attackSound.Play();
@@ -67,6 +69,7 @@ public class PlayerController : MonoBehaviour
         sword.SetActive(false);
         isAttacking = false;
     }
+    */
 
     void FixedUpdate()
     {

@@ -1,18 +1,25 @@
+using System.Collections;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Sword : MonoBehaviour
+public class Sword : Weapon
 {
-    private void OnTriggerEnter2D(Collider2D other)
+    private void Start()
     {
-        if (other.CompareTag("Enemy"))
+        GetComponents();
+    }
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))//LEFT CLICK
         {
-            Debug.Log("Hit enemy: " + other.name);
-
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(35);
-            }
+            StartCoroutine(SwordRoutine());
+        }
+        if (Input.GetMouseButtonDown(1) && _hasParry == true)//RIGHT CLICK
+        {
+            StartCoroutine(Parry(_parryWindow));
         }
     }
+
 }
+
