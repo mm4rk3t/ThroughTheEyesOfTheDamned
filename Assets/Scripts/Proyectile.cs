@@ -3,16 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class Proyectile : MonoBehaviour
 {
-    protected Vector3 _playerPos;
     [SerializeField] protected bool _isParryAble;
     [SerializeField] protected float _pVelocity;
     [SerializeField] protected AudioSource Sound;//Personal note : Remember Especifiying What is the purpose of this sound (OnParry, OnMovement, OnPlayerHit, OnEnviroment etc).
     protected SpriteRenderer _Color;
     public bool _IsParryAble{ get {return _isParryAble;}set{_isParryAble=value; }}
-    private void Start()
-    {
-        _playerPos = GameObject.Find("Player").transform.position;
-    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<PlayerController>())
