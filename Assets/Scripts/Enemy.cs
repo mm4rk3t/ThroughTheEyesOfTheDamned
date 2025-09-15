@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, IDamageable
 {
 
     [Header("Health Components")]
@@ -45,11 +45,9 @@ public abstract class Enemy : MonoBehaviour
 
     public IEnumerator DamageFlash()
     {
-        Debug.Log("start");
         spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f); // duration of flash
         spriteRenderer.color = originalColor; // revert back
-        Debug.Log("end");
     }
 
 

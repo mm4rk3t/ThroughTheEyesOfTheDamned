@@ -7,6 +7,10 @@ public class DummyControl : Enemy
 {
     private float _regenTimer = 5f;
     private float _timer;
+
+    private bool _tripleShot;
+
+    private EnemyShooting _shooting;
     private void Update()
     {
         if (_timer<=0 & health!=_maxHealth)
@@ -18,6 +22,12 @@ public class DummyControl : Enemy
         {
             _timer -= Time.deltaTime;
         }
+        if (_tripleShot)
+        {
+            
+        }
+
+
     }
     public override void TakeDamage(int dmg)
     {

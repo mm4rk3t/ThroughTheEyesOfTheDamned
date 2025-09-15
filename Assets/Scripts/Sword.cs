@@ -1,6 +1,3 @@
-using System.Collections;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Sword : Weapon
@@ -20,6 +17,9 @@ public class Sword : Weapon
             StartCoroutine(Parry(_parryWindow));
         }
     }
+
+
+    
 
 }
 

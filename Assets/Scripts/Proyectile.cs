@@ -5,22 +5,21 @@ public abstract class Proyectile : MonoBehaviour
 {
     [SerializeField] protected bool _isParryAble;
     [SerializeField] protected float _pVelocity;
-    [SerializeField] protected AudioSource Sound;//Personal note : Remember Especifiying What is the purpose of this sound (OnParry, OnMovement, OnPlayerHit, OnEnviroment etc).
+    [SerializeField] private int _damage;
+    [SerializeField] protected AudioClip Sound;//Personal note : Remember Especifiying What is the purpose of this sound (OnParry, OnMovement, OnPlayerHit, OnEnviroment etc).
     protected SpriteRenderer _Color;
-    public bool _IsParryAble{ get {return _isParryAble;}set{_isParryAble=value; }}
+    public bool IsParryAble{ get {return _isParryAble;}set{_isParryAble=value; }}
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.GetComponent<PlayerController>())
+        PlayerController player = other.GetComponent<PlayerController>();
+        if (player!=null)
         {
+            //Play AudioClip through SoundManager
             Debug.Log("----HIT PLAYER----");
-        }
-        
-        if (collision.GetComponent<Weapon>() && _isParryAble == true)//COMPRUEBA si colisiono con un arma, revisa si esta haciendo parry y si la bala instanciada es ParryAble
-        {
-            Debug.Log("------Bullet PARRIED!!------");
+            player.TakeDamage(_damage);
             Destroy(gameObject);
-            //Remember to do something else than just destroying, add something for Feedback
+
         }
     }
 

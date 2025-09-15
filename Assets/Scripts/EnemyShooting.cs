@@ -7,7 +7,7 @@ public class EnemyShooting : MonoBehaviour
     [SerializeField]private float _timeBetweenShots = 2f;
     [SerializeField]private float _shootTimer = 2f;
     private GameObject _player;
-    private Enemy enemy;
+    
     private Vector3 _playerPos;
     public Vector3 PlayerPos { get{return _playerPos; } set{ _playerPos = value; } }
     private float _degreeRotation;
@@ -19,7 +19,6 @@ public class EnemyShooting : MonoBehaviour
     
     private void Start()
     {
-        enemy = GetComponent<Enemy>();
         _player = GameObject.Find("Player");
         if (_player==null)
         {
@@ -41,7 +40,7 @@ public class EnemyShooting : MonoBehaviour
             Shoot();
         }
     }
-    private void Shoot()
+    public void Shoot()
     {
         int rand = Random.Range(0, _bullets.Count);
         Instantiate(_bullets[rand],_spawnpoint.position,Quaternion.identity);
