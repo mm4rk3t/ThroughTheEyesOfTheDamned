@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     void Update()
     {
         // Input WASD
+        if (Time.timeScale == 0) return;
+
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput.Normalize();
