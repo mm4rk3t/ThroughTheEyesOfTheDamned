@@ -9,6 +9,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
     [Header("Health Components")]
     [SerializeField] protected int health = 100;
+    public int Health { get { return health; } }
+
     [SerializeField] protected Canvas healthBar;
     [SerializeField] private Transform _hBarPos;//Posicion para la barra de vida
     protected FloatingHealthBar healthSlider;
