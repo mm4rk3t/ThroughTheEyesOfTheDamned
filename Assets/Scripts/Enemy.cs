@@ -1,17 +1,27 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
 
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, IDamageable
 {
-    [SerializeField]private int health = 100;
-    private int _maxHealth;
+
+    [Header("Health Components")]
+    [SerializeField] protected int health = 100;
+    public int Health { get { return health; } }
+
+    [SerializeField] protected Canvas healthBar;
+    [SerializeField] private Transform _hBarPos;//Posicion para la barra de vida
+    protected FloatingHealthBar healthSlider;
+    protected int _maxHealth;
+
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
-    private FloatingHealthBar healthSlider;
     private void Start()
     {
         _maxHealth = health;
+        Instantiate(healthBar, _hBarPos);
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
@@ -22,7 +32,7 @@ public class Enemy : MonoBehaviour
         healthSlider.UpdateHealthBar(health, _maxHealth);
     }
 
-    public void TakeDamage(int dmg)
+    public virtual  void TakeDamage(int dmg)
     {
         StartCoroutine(DamageFlash());
         health -= dmg;
@@ -35,19 +45,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator DamageFlash()
+    public IEnumerator DamageFlash()
     {
-        Debug.Log("start");
         spriteRenderer.color = Color.red;
         yield return new WaitForSeconds(0.1f); // duration of flash
         spriteRenderer.color = originalColor; // revert back
-        Debug.Log("end");
     }
+
 
     void Die()
     {
         Debug.Log(gameObject.name + " died!");
         Destroy(gameObject);
     }
-
+    
 }
