@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 
 
 public abstract class Enemy : MonoBehaviour, IDamageable
@@ -12,12 +10,15 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     public int Health { get { return health; } }
 
     [SerializeField] protected Canvas healthBar;
-    [SerializeField] private Transform _hBarPos;//Posicion para la barra de vida
+    [SerializeField] protected Transform _hBarPos;//Posicion para la barra de vida
     protected FloatingHealthBar healthSlider;
     protected int _maxHealth;
+    
 
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
+    protected SpriteRenderer spriteRenderer;
+    protected Color originalColor;
+
+    
     private void Start()
     {
         _maxHealth = health;
@@ -31,7 +32,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         healthSlider = GetComponentInChildren<FloatingHealthBar>();
         healthSlider.UpdateHealthBar(health, _maxHealth);
     }
-
+    
     public virtual  void TakeDamage(int dmg)
     {
         StartCoroutine(DamageFlash());
@@ -53,7 +54,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     }
 
 
-    void Die()
+    public void Die()
     {
         Debug.Log(gameObject.name + " died!");
         Destroy(gameObject);

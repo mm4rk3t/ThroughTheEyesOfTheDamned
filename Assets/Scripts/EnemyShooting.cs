@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Win32.SafeHandles;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour
@@ -43,18 +44,19 @@ public class EnemyShooting : MonoBehaviour
     public void Shoot()
     {
         int rand = Random.Range(0, _bullets.Count);
-        Instantiate(_bullets[rand],_spawnpoint.position,Quaternion.identity);
+        GameObject proj = Instantiate(_bullets[rand], _spawnpoint.position, Quaternion.identity);
+        proj.GetComponent<Bullet>().SetDirection(_playerPos-_spawnpoint.position);
         _shootTimer = _timeBetweenShots;
 
     }
 
-    private void TrackPlayer()
+    public void TrackPlayer()
     {
         Rotation(_playerPos, _spawnpoint);
         _pivotPoint.rotation = Quaternion.Euler(0, 0, _degreeRotation);
     }
 
-    public void Rotation(Vector3 target, Transform origin)
+    private void Rotation(Vector3 target, Transform origin)
     {
         Vector3 originVector = origin.transform.position;
         _degreeRotation = Mathf.Atan2(originVector.y - target.y, originVector.x - target.x) * Mathf.Rad2Deg;
