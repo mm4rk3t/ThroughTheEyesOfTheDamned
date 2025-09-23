@@ -91,6 +91,7 @@ public class Boss : Enemy
     }
     void LateUpdate()
     {
+        // asdhaosj szioldfghipazfg jsedfgiolñushdfiop h
         Vector3 viewPos = transform.position;
         viewPos.x = Mathf.Clamp(viewPos.x, -screenBounds.x + objectWidth, screenBounds.x - objectWidth);
         viewPos.y = Mathf.Clamp(viewPos.y, -screenBounds.y + objectHeight, screenBounds.y - objectHeight);
