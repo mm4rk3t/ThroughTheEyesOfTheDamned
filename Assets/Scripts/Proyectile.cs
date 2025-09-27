@@ -16,7 +16,7 @@ public abstract class Proyectile : MonoBehaviour
         if (player!=null)
         {
             //Play AudioClip through SoundManager
-            Debug.Log("----HIT PLAYER----");
+            //Debug.Log("----HIT PLAYER----");
             player.TakeDamage(_damage);
             Destroy(gameObject);
 

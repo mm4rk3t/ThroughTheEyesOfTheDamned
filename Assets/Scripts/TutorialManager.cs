@@ -12,7 +12,7 @@ public class TutorialManager : MonoBehaviour
     private bool _dPressed = false;
 
     private bool _movementComplete = false;
-    private bool _attackComplete = false;
+    //private bool _attackComplete = false;
     [SerializeField] EnemyShooting DummyShooting;
     [SerializeField] Enemy DummyControl;
     [SerializeField] private TextMeshProUGUI menuText;
@@ -90,7 +90,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _attackComplete = true;
+            //_attackComplete = true;
             currentState = TutorialState.Parry;
             tutorialText.text = "Ahora usa <color=white>Click Derecho</color> para hacer parry";
         }
@@ -121,7 +121,8 @@ public class TutorialManager : MonoBehaviour
         tutorialText.gameObject.SetActive(false);
         if (Input.GetKeyDown(KeyCode.M))
         {
-            SceneManager.LoadScene("MainMenu");
+            GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            gameManager.ChargeScene("CascaNuecesBoss");
         }
     }
     void ActivateDummy()

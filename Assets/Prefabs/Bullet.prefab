@@ -104,6 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isParryAble: 0
   _pVelocity: 5
+  _damage: 10
   Sound: {fileID: 0}
 --- !u!50 &5590695860281054456
 Rigidbody2D:

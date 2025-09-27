@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
@@ -14,13 +15,14 @@ public class PlayerController : MonoBehaviour, IDamageable
     private bool isAttacking = false;
     private SpriteRenderer spriteRenderer;
     
+
     [Header("Health")]
     [SerializeField] int health = 100;
+    [SerializeField] private Image healthBarFill;
     [Header("Speed")]
     [SerializeField] private float moveSpeed = 5f;
 
 
-    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -29,7 +31,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         rotatePivot = transform.GetChild(1).gameObject;
         Cursor.visible = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
-
     }
 
     void Update()
@@ -57,7 +58,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + moveSpeed * Time.fixedDeltaTime * moveInput);
     }
 
     public void TakeDamage(int dmg)
@@ -66,6 +67,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         StartCoroutine(DamageFlash());
         health -= dmg;
         //healthSlider.UpdateHealthBar(health, _maxHealth);
+        healthBarFill.fillAmount = (health/100f);
         Debug.Log(gameObject.name + " took " + dmg + " damage. HP left: " + health);
 
         if (health <= 0)
@@ -86,7 +88,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void Die()
     {
+        GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         Destroy(gameObject);
+        gameManager.ChargeScene("DefeatScene");
+        if (lives<=0)
+        {
+            //GameManager gameManager = GetComponent<GameManager>();
+            //gameManager.ChargeScene("DefeatScene");
+        }
+        lives--;
     }
 
 }
