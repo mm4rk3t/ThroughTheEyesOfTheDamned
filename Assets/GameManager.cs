@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void ChargeScene(string scene)
+    public void ChangeScene(string scene)
     {
         StartCoroutine(ToggleActiveTransition(_endSceneTransition,true, scene));
         

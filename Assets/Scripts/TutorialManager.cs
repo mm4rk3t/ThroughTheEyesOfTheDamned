@@ -122,7 +122,7 @@ public class TutorialManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.M))
         {
             GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-            gameManager.ChargeScene("CascaNuecesBoss");
+            gameManager.ChangeScene("CascaNuecesBoss");
         }
     }
     void ActivateDummy()
@@ -131,7 +131,7 @@ public class TutorialManager : MonoBehaviour
         currentState = TutorialState.Combat;
     }
 
-
+    
 
     void updateMovementText()
     {

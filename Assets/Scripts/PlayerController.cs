@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 {
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    public Vector2 MoveInput { get{return moveInput; } }
+
     private Camera cam;
     private GameObject pointer;
     private GameObject rotatePivot;
@@ -22,9 +24,16 @@ public class PlayerController : MonoBehaviour, IDamageable
     [Header("Speed")]
     [SerializeField] private float moveSpeed = 5f;
 
+    [Header("References")]
+    private GameManager gameManager;
 
     void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (gameManager==null)
+        {
+            Debug.Log("Game Manager Not found in Scene");
+        }
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
         pointer = transform.GetChild(0).gameObject;
@@ -88,15 +97,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void Die()
     {
-        GameManager gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         Destroy(gameObject);
-        gameManager.ChargeScene("DefeatScene");
-        if (lives<=0)
+        if (lives<0)
         {
-            //GameManager gameManager = GetComponent<GameManager>();
-            //gameManager.ChargeScene("DefeatScene");
+            gameManager.ChangeScene("DefeatScene");
         }
         lives--;
+
     }
 
 }
