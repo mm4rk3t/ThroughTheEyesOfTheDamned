@@ -1,11 +1,14 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
+[RequireComponent(typeof(PlayerAnimatorController))]
 public class PlayerController : MonoBehaviour, IDamageable
 {
     private Rigidbody2D rb;
     private Vector2 moveInput;
+    public Vector2 MoveInput { get{return moveInput; } }
+
     private Camera cam;
     private GameObject pointer;
     private GameObject rotatePivot;
@@ -13,59 +16,86 @@ public class PlayerController : MonoBehaviour, IDamageable
     private int lives = 3;
     private bool isAttacking = false;
     private SpriteRenderer spriteRenderer;
-    
+    Vector3 mousePos;
+
     [Header("Health")]
     [SerializeField] int health = 100;
+    [SerializeField] private Image healthBarFill;
+    private bool isDead;
     [Header("Speed")]
     [SerializeField] private float moveSpeed = 5f;
 
+    [Header("References")]
+    private GameManager gameManager;
+    private PlayerAnimatorController AnimatorController;
 
-    
     void Start()
     {
+        AnimatorController = GetComponent<PlayerAnimatorController>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (gameManager==null)
+        {
+            Debug.Log("Game Manager Not found in Scene");
+        }
         rb = GetComponent<Rigidbody2D>();
         cam = Camera.main;
         pointer = transform.GetChild(0).gameObject;
         rotatePivot = transform.GetChild(1).gameObject;
         Cursor.visible = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
-
     }
 
     void Update()
     {
         // Input WASD
-        if (Time.timeScale == 0) return;
-
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
-        moveInput.Normalize();
-        Vector3 mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
-        angleDeg = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * Mathf.Rad2Deg - 90;
-
+        if (isDead == true)
+        {
+            //Wait for R to Respawn
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PlayerRespawn();
+            }
+            return;
+        }
+        mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
+        pointer.transform.position = mousePos;
+        PlayerMovement(mousePos);
         if(!isAttacking)
         { 
             rotatePivot.transform.rotation = Quaternion.Euler(0f, 0f, angleDeg);
         }
-        pointer.transform.position = mousePos;
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Scene currentScene = SceneManager.GetActiveScene();  // get current scene
-            SceneManager.LoadScene(currentScene.name);           // reload it
-        }
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    Scene currentScene = SceneManager.GetActiveScene();  // get current scene
+        //    SceneManager.LoadScene(currentScene.name);           // reload it
+        //}
+
+    }
+
+    private void PlayerMovement(Vector3 mousepos)
+    {
+        if (Time.timeScale == 0) return;
+        moveInput.x = Input.GetAxisRaw("Horizontal");
+        moveInput.y = Input.GetAxisRaw("Vertical");
+        moveInput.Normalize();
+        angleDeg = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * Mathf.Rad2Deg - 90;
+
 
     }
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        if (isDead == true) return;
+        rb.MovePosition(rb.position + moveSpeed * Time.fixedDeltaTime * moveInput);
     }
 
     public void TakeDamage(int dmg)
     {
+        if (isDead == true) return;
         
         StartCoroutine(DamageFlash());
         health -= dmg;
         //healthSlider.UpdateHealthBar(health, _maxHealth);
+        healthBarFill.fillAmount = (health/100f);
         Debug.Log(gameObject.name + " took " + dmg + " damage. HP left: " + health);
 
         if (health <= 0)
@@ -86,7 +116,27 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void Die()
     {
-        Destroy(gameObject);
+        isDead = true;
+        lives--;
+        if (lives<0)
+        {
+            gameManager.ChangeScene("DefeatScene");
+            return;
+        }
+        else
+        {
+            gameManager.OnDeath(isDead);
+        }
+        AnimatorController.DeathAnimation(isDead);
+    }
+
+    private void PlayerRespawn()
+    {
+        AnimatorController.DeathAnimation(!isDead);
+        gameManager.OnDeath(!isDead);
+        health = 100;
+        healthBarFill.fillAmount = (health / 100f);
+        isDead = false;
     }
 
 }
