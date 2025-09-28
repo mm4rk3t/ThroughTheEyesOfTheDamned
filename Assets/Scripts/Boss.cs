@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Boss : Enemy
 {
@@ -14,8 +12,9 @@ public class Boss : Enemy
     [Header("Movement Stats")]
     [SerializeField] private float _moveSpeed = 2f;
     private Vector2 _moveDirection;
+    public Vector2 MoveDirection { get { return _moveDirection; } }
     private bool _isMoving = false;
-
+    public bool IsMoving { get{return _isMoving; } }
     [Header("AttackStats")]
     [SerializeField] private float _timeBetweenShots = 0.2f;
     private int _hitsTaken = 0;
@@ -25,7 +24,8 @@ public class Boss : Enemy
     [Header("Fase control")]
     [SerializeField] private float _moveTime = 2f;
     [SerializeField] private float _aimTime = 1f;
-
+    private bool _isShooting;
+    public bool IsShooting { get{return _isShooting; } }
     [Header("Screen Limits")]
     private Camera mainCamera;
     private Vector2 screenBounds;
@@ -40,6 +40,8 @@ public class Boss : Enemy
         {
             _isEnrage = true;
             _moveSpeed *= 1.5f;
+            _moveTime /= 2f;
+            _aimTime /= 2f;
             Debug.Log("¡Enfurecido!");
         }
         StartCoroutine(DamageFlash());
@@ -91,7 +93,11 @@ public class Boss : Enemy
     }
     void LateUpdate()
     {
+<<<<<<< HEAD
         // asdhaosj szioldfghipazfg jsedfgiolñushdfiop h
+=======
+        //movement limited to CameraView
+>>>>>>> Alam
         Vector3 viewPos = transform.position;
         viewPos.x = Mathf.Clamp(viewPos.x, -screenBounds.x + objectWidth, screenBounds.x - objectWidth);
         viewPos.y = Mathf.Clamp(viewPos.y, -screenBounds.y + objectHeight, screenBounds.y - objectHeight);
@@ -112,13 +118,14 @@ public class Boss : Enemy
 
             //Aiming Fase
             _isMoving = false;
+            AimAtPlayer();
             yield return new WaitForSeconds(_aimTime);
 
             //AttackFase
-            AimAtPlayer();
             StartCoroutine(ShootRoutine());
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(_aimTime);
         }
+
 
     }
 
@@ -126,7 +133,7 @@ public class Boss : Enemy
     {
         float x = Random.Range(-1f, 1f);
         float y = Random.Range(-1f, 1f);
-        _moveDirection = new Vector2(x, y).normalized;
+        _moveDirection = new Vector2(x, y);
     }
     void CheckAndReverseDirection()
     {
@@ -157,6 +164,7 @@ public class Boss : Enemy
     }
     IEnumerator ShootRoutine()
     {
+        _isShooting = true;
         int shots = _isEnrage ? 2 : 1;//si esta enfurecido, dispara 2 veces, si no 1;
         for (int i = 0; i < shots; i++)
         {
@@ -171,6 +179,7 @@ public class Boss : Enemy
                 yield return new WaitForSeconds(_timeBetweenShots);
             }
         }
+        _isShooting = false;
     }
 
     void InstantiateProjectile( Vector2 direction)
