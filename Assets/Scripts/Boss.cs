@@ -32,6 +32,9 @@ public class Boss : Enemy
     private float objectWidth;
     private float objectHeight;
 
+    [Header("References")]
+    public GameManager gameManager;
+
     public override void TakeDamage(int dmg)
     {
         _hitsTaken++;
@@ -54,6 +57,12 @@ public class Boss : Enemy
             Die();
         }
     }
+    public override void Die()
+    {
+        Debug.Log("Boss died! Triggering victory...");
+        gameManager.OnVictory(true);
+        Destroy(gameObject);
+    }
 
     private void Awake()
     {
@@ -65,6 +74,7 @@ public class Boss : Enemy
             objectWidth = spriteRenderer.bounds.size.x / 2;
             objectHeight = spriteRenderer.bounds.size.y / 2;
         }
+
     }
     private void Start()
     {

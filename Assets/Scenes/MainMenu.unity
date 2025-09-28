@@ -466,7 +466,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -3.5245972, y: 2.3496094}
+  m_AnchoredPosition: {x: -3.5246582, y: 2.3496094}
   m_SizeDelta: {x: 30.546, y: 32.8956}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &459532081
@@ -875,6 +875,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2133528862}
     m_Modifications:
+    - target: {fileID: 2349489743110881820, guid: cd5c2513f45e2bb4798d3527c4c36747, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349489743110881820, guid: cd5c2513f45e2bb4798d3527c4c36747, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2349489743110881820, guid: cd5c2513f45e2bb4798d3527c4c36747, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5666124567096629049, guid: cd5c2513f45e2bb4798d3527c4c36747, type: 3}
       propertyPath: m_Name
       value: StartTransition

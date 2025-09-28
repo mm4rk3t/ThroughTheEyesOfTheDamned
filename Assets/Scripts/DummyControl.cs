@@ -27,7 +27,6 @@ public class DummyControl : Enemy
             
         }
 
-
     }
     public override void TakeDamage(int dmg)
     {

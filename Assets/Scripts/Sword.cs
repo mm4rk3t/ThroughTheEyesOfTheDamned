@@ -18,9 +18,5 @@ public class Sword : Weapon
             StartCoroutine(Parry(_parryWindow));
         }
     }
-
-
-    
-
 }
 

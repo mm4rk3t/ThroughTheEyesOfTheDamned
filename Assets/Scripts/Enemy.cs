@@ -54,10 +54,20 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     }
 
 
-    public void Die()
+    public virtual void Die()
     {
         Debug.Log(gameObject.name + " died!");
         Destroy(gameObject);
     }
-    
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Bullet bullet = other.GetComponent<Bullet>();
+        if (bullet != null && bullet.isReflected)
+        {
+            TakeDamage(bullet._damage * 10);
+            Destroy(bullet.gameObject);
+        }
+    }
+
 }

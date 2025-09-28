@@ -41,8 +41,23 @@ public abstract class Weapon : MonoBehaviour
             {
                 SoundManager.PlayerSound(_parrySound);
                 ParryComponents(false);//disable components of sword because of parry
-                
-                Destroy(other.gameObject);//Destroy bullet
+
+
+                // Get mouse position in world space
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePos.z = 0;
+
+                // Direction from bullet to mouse
+                Vector2 reflectDir = (mousePos - other.transform.position).normalized;
+
+                // Send it back
+                Bullet bullet = other.GetComponent<Bullet>();
+                if (bullet != null)
+                {
+                    bullet.Reflect(reflectDir);
+                }
+
+                //Destroy(other.gameObject);//Destroy bullet
             }
         }
     }

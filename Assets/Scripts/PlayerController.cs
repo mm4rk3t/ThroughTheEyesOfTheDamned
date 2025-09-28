@@ -57,6 +57,17 @@ public class PlayerController : MonoBehaviour, IDamageable
             }
             return;
         }
+
+        if (gameManager.isVictory == true)
+        {
+            //Wait for R to Restart
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PlayerRespawn();
+            }
+            return;
+        }
+
         mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
         pointer.transform.position = mousePos;
         PlayerMovement(mousePos);
@@ -132,11 +143,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void PlayerRespawn()
     {
-        AnimatorController.DeathAnimation(!isDead);
-        gameManager.OnDeath(!isDead);
-        health = 100;
-        healthBarFill.fillAmount = (health / 100f);
-        isDead = false;
+        if(isDead)
+        {
+            AnimatorController.DeathAnimation(!isDead);
+            gameManager.OnDeath(!isDead);
+            health = 100;
+            healthBarFill.fillAmount = (health / 100f);
+            isDead = false;
+        } else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
 }

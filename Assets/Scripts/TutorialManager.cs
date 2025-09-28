@@ -1,7 +1,5 @@
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -132,7 +130,6 @@ public class TutorialManager : MonoBehaviour
     }
 
     
-
     void updateMovementText()
     {
         //Changes the color "white" to Green depending on the boolean value
