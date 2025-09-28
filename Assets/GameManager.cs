@@ -32,8 +32,6 @@ public class GameManager : MonoBehaviour
         _deathScreen.SetActive(value);
     }
 
-
-
     public void ChangeScene(string scene)
     {
         StartCoroutine(ToggleActiveTransition(_endSceneTransition,true, scene));

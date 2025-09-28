@@ -28,7 +28,7 @@ public class PlayerAnimatorController : MonoBehaviour
         animator.SetBool(IsMoving, true);
         UpdateMovementAnimation(direction);
     }
-    private void UpdateMovementAnimation(Vector2 direction)
+    void UpdateMovementAnimation(Vector2 direction)
     {
         animator.SetFloat(paramX, direction.x);
         animator.SetFloat(paramY, direction.y);
@@ -36,6 +36,19 @@ public class PlayerAnimatorController : MonoBehaviour
 
     public void DeathAnimation(bool value)
     {
-        animator.SetBool("IsDead",value);
+        if (value == true)
+        {
+            Debug.Log("isDead animation:");
+            animator.Play("Death");
+            return;
+        }
+        animator.Play("Idle");
     }
+
+    public void DisableAfterDeath()
+    {
+        animator.enabled = !animator.enabled;
+    }
+
+
 }

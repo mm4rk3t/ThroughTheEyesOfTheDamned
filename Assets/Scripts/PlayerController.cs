@@ -48,7 +48,15 @@ public class PlayerController : MonoBehaviour, IDamageable
     void Update()
     {
         // Input WASD
-        if (isDead == true) return;
+        if (isDead == true)
+        {
+            //Wait for R to Respawn
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                PlayerRespawn();
+            }
+            return;
+        }
         mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
         pointer.transform.position = mousePos;
         PlayerMovement(mousePos);
@@ -76,11 +84,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     void FixedUpdate()
     {
+        if (isDead == true) return;
         rb.MovePosition(rb.position + moveSpeed * Time.fixedDeltaTime * moveInput);
     }
 
     public void TakeDamage(int dmg)
     {
+        if (isDead == true) return;
         
         StartCoroutine(DamageFlash());
         health -= dmg;
@@ -107,23 +117,17 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void Die()
     {
         isDead = true;
-        AnimatorController.DeathAnimation(isDead);
         lives--;
         if (lives<0)
         {
             gameManager.ChangeScene("DefeatScene");
+            return;
         }
-        gameManager.OnDeath(isDead);
-        while (isDead == true)
+        else
         {
-            //wait R Input for respawn
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                
-                PlayerRespawn();
-            }
+            gameManager.OnDeath(isDead);
         }
-        
+        AnimatorController.DeathAnimation(isDead);
     }
 
     private void PlayerRespawn()
@@ -132,6 +136,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         gameManager.OnDeath(!isDead);
         health = 100;
         healthBarFill.fillAmount = (health / 100f);
+        isDead = false;
     }
 
 }
