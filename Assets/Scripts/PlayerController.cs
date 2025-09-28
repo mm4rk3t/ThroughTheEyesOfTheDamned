@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
+[RequireComponent(typeof(PlayerAnimatorController))]
 public class PlayerController : MonoBehaviour, IDamageable
 {
     private Rigidbody2D rb;
@@ -16,19 +16,22 @@ public class PlayerController : MonoBehaviour, IDamageable
     private int lives = 3;
     private bool isAttacking = false;
     private SpriteRenderer spriteRenderer;
-    
+    Vector3 mousePos;
 
     [Header("Health")]
     [SerializeField] int health = 100;
     [SerializeField] private Image healthBarFill;
+    private bool isDead;
     [Header("Speed")]
     [SerializeField] private float moveSpeed = 5f;
 
     [Header("References")]
     private GameManager gameManager;
+    private PlayerAnimatorController AnimatorController;
 
     void Start()
     {
+        AnimatorController = GetComponent<PlayerAnimatorController>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (gameManager==null)
         {
@@ -45,24 +48,30 @@ public class PlayerController : MonoBehaviour, IDamageable
     void Update()
     {
         // Input WASD
-        if (Time.timeScale == 0) return;
-
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.y = Input.GetAxisRaw("Vertical");
-        moveInput.Normalize();
-        Vector3 mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
-        angleDeg = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * Mathf.Rad2Deg - 90;
-
+        if (isDead == true) return;
+        mousePos = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
+        pointer.transform.position = mousePos;
+        PlayerMovement(mousePos);
         if(!isAttacking)
         { 
             rotatePivot.transform.rotation = Quaternion.Euler(0f, 0f, angleDeg);
         }
-        pointer.transform.position = mousePos;
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Scene currentScene = SceneManager.GetActiveScene();  // get current scene
-            SceneManager.LoadScene(currentScene.name);           // reload it
-        }
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    Scene currentScene = SceneManager.GetActiveScene();  // get current scene
+        //    SceneManager.LoadScene(currentScene.name);           // reload it
+        //}
+
+    }
+
+    private void PlayerMovement(Vector3 mousepos)
+    {
+        if (Time.timeScale == 0) return;
+        moveInput.x = Input.GetAxisRaw("Horizontal");
+        moveInput.y = Input.GetAxisRaw("Vertical");
+        moveInput.Normalize();
+        angleDeg = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * Mathf.Rad2Deg - 90;
+
 
     }
     void FixedUpdate()
@@ -97,13 +106,32 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void Die()
     {
-        Destroy(gameObject);
+        isDead = true;
+        AnimatorController.DeathAnimation(isDead);
+        lives--;
         if (lives<0)
         {
             gameManager.ChangeScene("DefeatScene");
         }
-        lives--;
+        gameManager.OnDeath(isDead);
+        while (isDead == true)
+        {
+            //wait R Input for respawn
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                
+                PlayerRespawn();
+            }
+        }
+        
+    }
 
+    private void PlayerRespawn()
+    {
+        AnimatorController.DeathAnimation(!isDead);
+        gameManager.OnDeath(!isDead);
+        health = 100;
+        healthBarFill.fillAmount = (health / 100f);
     }
 
 }

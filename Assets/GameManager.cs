@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject _startSceneTransition;
     [SerializeField] private GameObject _endSceneTransition;
+    [SerializeField] private GameObject _deathScreen;
     private void Start()
     {
         StartCoroutine(ToggleActiveTransition(_startSceneTransition, true, SceneManager.GetActiveScene().name));
@@ -26,10 +27,15 @@ public class GameManager : MonoBehaviour
         }
         
     }
+    public void OnDeath(bool value)
+    {
+        _deathScreen.SetActive(value);
+    }
+
+
 
     public void ChangeScene(string scene)
     {
         StartCoroutine(ToggleActiveTransition(_endSceneTransition,true, scene));
-        
     }
 }

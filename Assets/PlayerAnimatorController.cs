@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerAnimatorController : MonoBehaviour
 {
-
     private Animator animator;
     private PlayerController player;
     private Vector2 direction;
@@ -33,5 +32,10 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         animator.SetFloat(paramX, direction.x);
         animator.SetFloat(paramY, direction.y);
+    }
+
+    public void DeathAnimation(bool value)
+    {
+        animator.SetBool("IsDead",value);
     }
 }
